@@ -10,28 +10,119 @@
         <button id='<%= r.id %>'
             onClick='javascript:logTask(<%= r.id %>);'><%= r.name %></button>
     <% }); %>
+        <button id="observationButton" onclick='javascript:logObservation()'>Start Observation</button>
     <script>
 let currentTaskId = null;
+var obsTest = 0;
+
 
 const logTask = async function(id) {
-    const response = await fetch('/log', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'  
-        },
-        body: JSON.stringify({
-            users_id: -1,
-            students_id: -1,
-            tasks_id: id,
-            duration: "'+00:00:01'"
-        })
-    });
-    const result = await response.json();
-    console.log(result);
     
-    currentTaskId = id;
+
+    obsTest++;
+    
+    if (obsTest == 1) {
+        
+        var test = document.querySelector('#yesOrNoObserve');
+        test.innerHTML = "You are now observing";
+        document.querySelector("#observationButton").innerHTML = "End Observation";
+        obsCurrent = true;
+        var obsCurrent = true;
+        startTimer();
+        
+        
+    } 
+    if (obsTest == 2) {
+        stopTimer();
+        const response = await fetch('/log', {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                users_id: -1,
+                students_id: -1,
+                tasks_id: id,
+                duration: timeVal
+            })
+        });
+        const result = await response.json();
+        console.log(result);
+        
+        currentTaskId = id;
+
+        
+        console.log(timeVal);
+        var test = document.querySelector('#yesOrNoObserve');
+        test.innerHTML = "You are currently not observing.";
+        document.querySelector("#observationButton").innerHTML = "Start Observation";
+        obsTest = 0;
+        var obsCurrent = false; 
+    }
 };
+
+var hr = 0;
+var min = 0;
+var sec = 0;
+var stoptime = true;
+var timeVal = "";
+
+
+function startTimer() {
+  if (stoptime == true) {
+        stoptime = false;
+        timerCycle();
+    }
+}
+function stopTimer() {
+  if (stoptime == false) {
+    stoptime = true;
+  }
+}
+
+function timerCycle() {
+    if (stoptime == false) {
+    sec = parseInt(sec);
+    min = parseInt(min);
+    hr = parseInt(hr);
+
+    sec = sec + 1;
+
+    if (sec == 60) {
+      min = min + 1;
+      sec = 0;
+    }
+    if (min == 60) {
+      hr = hr + 1;
+      min = 0;
+      sec = 0;
+    }
+
+    if (sec < 10 || sec == 0) {
+      sec = '0' + sec;
+    }
+    if (min < 10 || min == 0) {
+      min = '0' + min;
+    }
+    if (hr < 10 || hr == 0) {
+      hr = '0' + hr;
+    }
+
+    timeVal = '\'+' + hr + ':' + min + ':' + sec + '\'';
+    document.querySelector("#timerCount").innerHTML = hr + ':' + min + ':' + sec;
+
+    setTimeout("timerCycle()", 1000);
+  }
+}
+
+
     </script>
+    
+
+    
+    <p id="yesOrNoObserve">You are currently not observing.</p>
+    <p id="timerCount"></p>
+    <a href="/db-info">Logan</a>
 </body>
 </html>
