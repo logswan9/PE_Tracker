@@ -6,11 +6,11 @@
 </head>
 <body>
     <h1>PE Tracker</h1>
+    <h2></h2>
     <% tasks.forEach(function(r) {%>
         <button id='<%= r.id %>'
             onClick='javascript:logTask(<%= r.id %>);'><%= r.name %></button>
     <% }); %>
-        <button id="observationButton" onclick='javascript:logObservation()'>Start Observation</button>
     <script>
 let currentTaskId = null;
 var obsTest = 0;
@@ -24,7 +24,6 @@ const logTask = async function(id) {
         
         var test = document.querySelector('#yesOrNoObserve');
         test.innerHTML = "You are now observing";
-        document.querySelector("#observationButton").innerHTML = "End Observation";
         obsCurrent = true;
         var obsCurrent = true;
         startTimer();
@@ -120,6 +119,6 @@ function timerCycle() {
     
     <p id="yesOrNoObserve">You are currently not observing.</p>
     <p id="timerCount"></p>
-    <a href="/db-info">Logan</a>
+    <a href="/db-info">Database</a>
 </body>
 </html>
