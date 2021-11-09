@@ -6,21 +6,21 @@
 </head>
 <body>
     <h1>PE Tracker</h1>
-    <h2></h2>
+    <h2>Click on a task to start observing. Then click it again to stop.</h2>
     <% tasks.forEach(function(r) {%>
         <button id='<%= r.id %>'
             onClick='javascript:logTask(<%= r.id %>);'><%= r.name %></button>
     <% }); %>
     <script>
 let currentTaskId = null;
-var obsTest = 0;
+var observationUnderway = 0;
 
 const logTask = async function(id) {
     
 
-    obsTest++;
+    observationUnderway++;
     
-    if (obsTest == 1) {
+    if (observationUnderway == 1) {
         
         var test = document.querySelector('#yesOrNoObserve');
         test.innerHTML = "You are now observing";
@@ -30,7 +30,7 @@ const logTask = async function(id) {
         
         
     } 
-    if (obsTest == 2) {
+    if (observationUnderway == 2) {
         stopTimer();
         const response = await fetch('/log', {
             method: 'POST',
@@ -54,7 +54,7 @@ const logTask = async function(id) {
         var test = document.querySelector('#yesOrNoObserve');
         test.innerHTML = "You are currently not observing.";
         document.querySelector("#observationButton").innerHTML = "Start Observation";
-        obsTest = 0;
+        observationUnderway = 0;
         var obsCurrent = false; 
     }
 };
@@ -118,6 +118,7 @@ function timerCycle() {
 
     <p id="yesOrNoObserve">You are currently not observing.</p>
     <p id="timerCount"></p>
+    <h4>You can view saved data in the database link below.</h4>
     <a href="/db-info">Database</a>
 </body>
 </html>
